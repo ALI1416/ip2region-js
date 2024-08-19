@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ali1416/ip2region": "^1.0.0",
+    "@ali1416/ip2region": "^1.1.0",
     "vue": "^3.4.37"
   },
   "devDependencies": {

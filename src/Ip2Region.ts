@@ -80,7 +80,7 @@ class Ip2Region {
    */
   parse(ip: string | number): Region | undefined {
     if (typeof ip === 'string') {
-      return this.innerParse(ip2Number(ip))
+      return this.innerParse(this.ip2Number(ip))
     } else if (typeof ip === 'number') {
       if (ip < 0 || ip > 0xFFFFFFFF) {
         throw new Ip2RegionException(`number型IP地址 ${ip} 不合法！`)
@@ -88,6 +88,71 @@ class Ip2Region {
       return this.innerParse(ip)
     } else {
       throw new Ip2RegionException(`类型 ${(typeof ip)} 不合法！应为 string | number`)
+    }
+  }
+
+  /**
+   * IP地址转number
+   *
+   * @param ip IP地址
+   * @return number number型IP地址
+   */
+  ip2Number(ip: string) {
+    if (!ip) {
+      throw new Ip2RegionException('IP地址不能为空！')
+    }
+    let s = ip.split('.')
+    if (s.length !== 4) {
+      throw new Ip2RegionException(`IP地址 ${ip} 不合法！`)
+    }
+    let address = 0
+    for (let i = 0; i < 4; i++) {
+      let v = Number(s[i])
+      if (v < 0 || v > 255) {
+        throw new Ip2RegionException(`IP地址 ${ip} 不合法！`)
+      }
+      address |= (v << 8 * (3 - i))
+    }
+    return address
+  }
+
+  /**
+   * number转IP地址
+   *
+   * @param ip number型IP地址
+   * @return string IP地址
+   */
+  number2Ip(ip: number) {
+    if (ip < 0 || ip > 0xFFFFFFFF) {
+      throw new Ip2RegionException(`number型IP地址 ${ip} 不合法！`)
+    }
+    return ((ip >> 24) & 0xFF) + '.' + ((ip >> 16) & 0xFF) + '.' + ((ip >> 8) & 0xFF) + '.' + ((ip) & 0xFF)
+  }
+
+  /**
+   * 是合法的IP地址
+   *
+   * @param ip IP地址
+   * @return boolean 是否合法
+   */
+  isValidIp(ip: string | number) {
+    if (typeof ip === 'number') {
+      return ip >= 0 && ip <= 0xFFFFFFFF
+    } else {
+      if (!ip) {
+        return false
+      }
+      let s = ip.split('.')
+      if (s.length !== 4) {
+        return false
+      }
+      for (let i = 0; i < 4; i++) {
+        let v = Number(s[i])
+        if (v < 0 || v > 255) {
+          return false
+        }
+      }
+      return true
     }
   }
 
@@ -129,11 +194,13 @@ class Ip2Region {
         }
       }
     }
+    pos += 4
 
     // 记录区
-    pos = this.buffer.getInt32(pos + 4, true)
+    pos = this.buffer.getInt32(pos, true)
     let recordValueLength = this.buffer.getInt8(pos) & 0xFF
-    let recordValue = this.buffer.buffer.slice(pos + 1, pos + 1 + recordValueLength)
+    pos++
+    let recordValue = this.buffer.buffer.slice(pos, pos + recordValueLength)
     return new Region(decoder.decode(recordValue))
   }
 
@@ -152,72 +219,6 @@ class Ip2Region {
       return pos
     }
   }
-
 }
 
-/**
- * IP地址转number
- *
- * @param ip IP地址
- * @return number number型IP地址
- */
-function ip2Number(ip: string) {
-  if (!ip) {
-    throw new Ip2RegionException('IP地址不能为空！')
-  }
-  let s = ip.split('.')
-  if (s.length != 4) {
-    throw new Ip2RegionException(`IP地址 ${ip} 不合法！`)
-  }
-  let address = 0
-  for (let i = 0; i < 4; i++) {
-    let v = Number(s[i])
-    if (v < 0 || v > 255) {
-      throw new Ip2RegionException(`IP地址 ${ip} 不合法！`)
-    }
-    address |= (v << 8 * (3 - i))
-  }
-  return address
-}
-
-/**
- * number转IP地址
- *
- * @param ip number型IP地址
- * @return string IP地址
- */
-function number2Ip(ip: number) {
-  if (ip < 0 || ip > 0xFFFFFFFF) {
-    throw new Ip2RegionException(`number型IP地址 ${ip} 不合法！`)
-  }
-  return ((ip >> 24) & 0xFF) + '.' + ((ip >> 16) & 0xFF) + '.' + ((ip >> 8) & 0xFF) + '.' + ((ip) & 0xFF)
-}
-
-/**
- * 是合法的IP地址
- *
- * @param ip IP地址
- * @return boolean 是否合法
- */
-function isValidIp(ip: string | number) {
-  if (typeof ip === 'number') {
-    return ip >= 0 && ip <= 0xFFFFFFFF
-  } else {
-    if (!ip) {
-      return false
-    }
-    let s = ip.split('.')
-    if (s.length !== 4) {
-      return false
-    }
-    for (let i = 0; i < 4; i++) {
-      let v = Number(s[i])
-      if (v < 0 || v > 255) {
-        return false
-      }
-    }
-    return true
-  }
-}
-
-export {Ip2Region, ip2Number, number2Ip, isValidIp}
+export {Ip2Region}
