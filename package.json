@@ -1,0 +1,52 @@
+{
+  "name": "@ali1416/ip2region",
+  "version": "1.0.0",
+  "description": "IP地址转区域JavaScript版",
+  "scripts": {
+    "tsc": "npx tsc",
+    "rollup": "npx rollup -c --bundleConfigAsCjs",
+    "build": "npm run tsc && npm run rollup"
+  },
+  "main": "./dist/ip2region.node.js",
+  "module": "./lib/main.js",
+  "types": "./types/main.d.ts",
+  "author": {
+    "name": "ali",
+    "email": "ali-k@foxmail.com"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "types",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "ip",
+    "region"
+  ],
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/ALI1416/ip2region-js",
+  "bugs": "https://github.com/ALI1416/ip2region-js/issues/new",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ALI1416/ip2region-js.git"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@zip.js/zip.js": "^2.7.48"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.20.0",
+    "typescript": "^5.5.4"
+  }
+}

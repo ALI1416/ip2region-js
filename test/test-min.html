@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Title</title>
+  <script src="../node_modules/@zip.js/zip.js/dist/zip.min.js"></script>
+  <script src="../dist/ip2region.min.js"></script>
+</head>
+
+<body>
+<label for="url">URL地址：</label><input type="text" id="url" size="60"
+                                        value="https://www.404z.cn/files/ip2region/v3.0.0/data/ip2region.zdb">
+<button id="loadUrl">加载</button>
+<br>
+<label for="file">zdb文件：</label><input type="file" id="file">
+<button id="loadFile">加载</button>
+<br>
+<label for="ip">IP地址：</label><input type="text" id="ip" value="123.132.0.0">
+<button id="parse">解析</button>
+<p id="tip"></p>
+<hr>
+<div id="result"></div>
+<script>
+  const url = document.getElementById('url')
+  const loadUrl = document.getElementById('loadUrl')
+  const file = document.getElementById('file')
+  const loadFile = document.getElementById('loadFile')
+  const ip = document.getElementById('ip')
+  const parse = document.getElementById('parse')
+  const tip = document.getElementById('tip')
+  const result = document.getElementById('result')
+
+  const reader = new FileReader()
+  const ip2Region = new Ip2Region()
+
+  loadUrl.addEventListener('click', async function () {
+    try {
+      await ip2Region.initByUrl(url.value)
+    } catch (e) {
+      console.error(e)
+      tip.innerText = e
+    }
+    tip.innerText = 'URL地址加载成功！'
+  })
+  let zdbFile
+  file.addEventListener('change', function (e) {
+    zdbFile = e.target.files[0]
+  })
+  loadFile.addEventListener('click', function () {
+    try {
+      reader.onload = async function (e) {
+        try {
+          await ip2Region.init(e.target.result)
+        } catch (e) {
+          console.error(e)
+          tip.innerText = e
+        }
+      }
+      reader.readAsArrayBuffer(zdbFile)
+      tip.innerText = 'zdb文件加载成功！'
+    } catch (e) {
+      console.error(e)
+      tip.innerText = e
+    }
+  })
+  parse.addEventListener('click', function () {
+    try {
+      result.innerText = JSON.stringify(ip2Region.parse(ip.value))
+    } catch (e) {
+      console.error(e)
+      tip.innerText = e
+    }
+  })
+</script>
+</body>
+
+</html>
