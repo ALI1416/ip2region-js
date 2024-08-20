@@ -193,8 +193,8 @@ class Ip2Region {
           break
         }
       }
+      pos += 4
     }
-    pos += 4
 
     // 记录区
     pos = this.buffer.getInt32(pos, true)

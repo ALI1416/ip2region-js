@@ -22,5 +22,6 @@ async function runFile() {
 }
 
 function run() {
+  console.log(ip2Region.parse('0.0.0.0'))
   console.log(ip2Region.parse('123.132.0.0'))
 }
