@@ -8,8 +8,9 @@
 
 /**
  * 生成CRC表
+ * @return {number[]} CRC表
  */
-function makeTable() {
+function makeTable(): number[] {
   let temp: number, table: number[] = []
   for (let i = 0; i < 256; i++) {
     temp = i
@@ -30,9 +31,9 @@ const crcTable = makeTable()
  * 计算CRC32
  * @param buffer 数据
  * @param start 起始下标
- * @return number CRC32
+ * @return {number} CRC32
  */
-function crc32(buffer: Uint8Array, start: number) {
+function crc32(buffer: Uint8Array, start: number): number {
   let crc = -1
   for (let i = start; i < buffer.length; i++) {
     crc = (crc >>> 8) ^ crcTable[(crc ^ buffer[i]) & 0xFF]

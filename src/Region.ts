@@ -24,7 +24,7 @@ class Region {
   readonly isp: string
 
   /**
-   * 构造函数
+   * 构造区域
    * @param region 区域字符串
    */
   constructor(region: string) {

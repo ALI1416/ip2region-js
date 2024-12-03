@@ -16,8 +16,10 @@ async function runUrl() {
 }
 
 async function runFile() {
+  console.log(`是否已经初始化：${ip2Region.initialized()}`)
   let buffer = fs.readFileSync(zdbPath).buffer
   await ip2Region.init(buffer)
+  console.log(`是否已经初始化：${ip2Region.initialized()}`)
   run()
 }
 
