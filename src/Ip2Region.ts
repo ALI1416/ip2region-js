@@ -26,7 +26,7 @@ class Ip2Region {
    */
   private vector2AreaPtr: number
   /**
-   * 索引区指针
+   * 一级索引区指针
    */
   private vectorAreaPtr: number
 
@@ -175,18 +175,18 @@ class Ip2Region {
     let left = this.buffer.getInt32(pos, true)
     let right = this.buffer.getInt32(pos + 4, true)
 
-    // 索引区
+    // 一级索引区
     if (left === right || left === right - 8) {
       pos = left + 4
     } else {
       right -= 8
       // 二分查找
       let ipSegments = ip & 0xFFFF
-      // 索引区
+      // 一级索引区
       while (left <= right) {
         pos = this.align(Math.floor((left + right) / 2))
         // 查找是否匹配到
-        let startAndEnd = this.buffer.getInt32(pos) & 0xFF
+        let startAndEnd = this.buffer.getInt32(pos)
         let ipSegmentsStart = startAndEnd & 0xFFFF
         let ipSegmentsEnd = startAndEnd >>> 16
         if (ipSegments < ipSegmentsStart) {
